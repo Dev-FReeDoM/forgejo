@@ -84,7 +84,14 @@ var (
 		"git-upload-pack":    perm.AccessModeRead,
 		"git-upload-archive": perm.AccessModeRead,
 		"git-receive-pack":   perm.AccessModeWrite,
-		lfsAuthenticateVerb:  perm.AccessModeNone,
+		// enforced throughout the LFS implementation, but noticing that this had
+		// 'perm.AccessModeNone' earlier (which was ok but arguably error-prone)
+		// caused a reader to nearly skip a heartbeat so might as well add it for
+		// mental health reasons
+		//
+		// inspired by:
+		// https://codeberg.org/forgejo-aneksajo/forgejo-aneksajo/src/commit/bdc82d4b4876ff4c4b67c56e4686a63b925b23b0/cmd/serv.go#L88
+		lfsAuthenticateVerb: perm.AccessModeRead,
 	}
 	alphaDashDotPattern = regexp.MustCompile(`[^\w-\.]`)
 )

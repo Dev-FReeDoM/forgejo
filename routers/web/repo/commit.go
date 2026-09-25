@@ -22,6 +22,7 @@ import (
 	"forgejo.org/modules/charset"
 	"forgejo.org/modules/git"
 	"forgejo.org/modules/gitrepo"
+	"forgejo.org/modules/lfs"
 	"forgejo.org/modules/log"
 	"forgejo.org/modules/markup"
 	"forgejo.org/modules/setting"
@@ -376,6 +377,18 @@ func Diff(ctx *context.Context) {
 	if err != nil {
 		ctx.ServerError("GetDiff", err)
 		return
+	}
+
+	// TODO: Move this to GetDiffFull
+	// TODO: Check if the pointer is actually present in the store
+	for _, file := range diff.Files {
+		actualFileContent, err := commit.GetFileContent(file.Name, lfs.BlobSizeCutoff)
+		if err != nil {
+			continue
+		}
+		if _, err := lfs.ReadPointerFromString(actualFileContent); err == nil {
+			file.IsLFSFile = true
+		}
 	}
 
 	parents := make([]string, commit.ParentCount())

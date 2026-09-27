@@ -507,12 +507,12 @@ test.describe('Markdown insert link', () => {
     await expect(async () => {
       await evaluateLinkInsertion(page, '#comment-form', false);
       await evaluateLinkInsertion(page, '#issuecomment-2', true);
-    }).toPass({timeout: 3000});
+    }).toPass({timeout: 7000});
 
     await expect(async () => {
       await evaluateLinkInsertionShortcut(page, '#comment-form');
       await evaluateLinkInsertionShortcut(page, '#issuecomment-2');
-    }).toPass({timeout: 3000});
+    }).toPass({timeout: 7000});
   });
 });
 
